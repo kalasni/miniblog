@@ -1,7 +1,7 @@
 
 .directory
-creden.txt
-local_settings.py
+#creden.txt
+#local_settings.py
 
 # Python bytecode
 *.pyc
