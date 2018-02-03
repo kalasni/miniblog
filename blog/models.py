@@ -57,3 +57,28 @@ class Post(models.Model):
                                                 self.slug])
 
 
+
+class Comment(models.Model):
+    """
+    Model representing a comment
+    """
+
+    # The related_name attribute allows us to name the attribute that we use
+    # for the relation from the related object back to this one.
+    # If the related_name is not defined, Django will use the undercase name
+    # of the model followed by _set (that is, comment_set)
+    post = models.ForeignKey(Post, related_name='comments')
+    name = models.CharField(max_length=80)
+    email = models.EmailField()
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('created',)
+
+    def __str__(self):
+        return 'Comment by {} on {}'.format(self.name, self.post)
+
+

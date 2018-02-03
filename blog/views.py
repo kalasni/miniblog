@@ -3,8 +3,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
 from django.views.generic import ListView
 
-from .models import Post, PublishedManager
-from .forms import EmailPostForm
+from .models import Post, PublishedManager, Comment
+from .forms import EmailPostForm, CommentForm
 
 # def post_list(request):
 #     object_list = Post.published.all()
@@ -44,10 +44,29 @@ def post_detail(request, year, month, day, post):
                                                          publish__year=year,
                                                          publish__month=month,
                                                          publish__day=day)
-    #return render(request,
-                             #'blog/post/detail.html', {'page': page, 'post': post})
 
-    return render(request, 'blog/post/detail.html', {'post': post})
+    # List of actives comments for this post.
+    # We are building this QuerySet starting from the post object, using the
+    # manager for related objects we defined as comments using the related_name
+    # attribute of the relationship in the Comment model.
+    comments = post.comments.filter(active=True)
+
+    if request.method == 'POST':
+        # A comment was posted
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            # Create a comment object but don't save to the db yet
+            new_comment = comment_form.save(commit=False)
+            # Assign the current post to the comment
+            new_comment.post = post
+            # Save the comment to the database
+            new_comment.save()
+    else:
+        # There is no POST request, so the view is called by a GET request
+        comment_form = CommentForm()
+
+    return render(request, 'blog/post/detail.html', {'post': post,
+         'comments': comments, 'comment_form': comment_form})
 
 
 def post_share(request, post_id):
