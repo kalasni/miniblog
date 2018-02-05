@@ -3,6 +3,9 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
+# django-taggit
+from taggit.managers import TaggableManager
+
 
 # Custom model manager
 class PublishedManager(models.Manager):
@@ -41,6 +44,8 @@ class Post(models.Model):
     # Post.published.filter(title__startswith='Who')
     published = PublishedManager()
 
+    tags = TaggableManager()
+
     class Meta:
         # Sort results by the publish field in descending order by default
         ordering = ('-publish',)
@@ -55,6 +60,8 @@ class Post(models.Model):
                                                 self.publish.strftime('%m'),
                                                 self.publish.strftime('%d'),
                                                 self.slug])
+
+
 
 
 
