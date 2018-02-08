@@ -25,6 +25,8 @@ SECRET_KEY = 'ty74#a7rrkjs_^0k@xc!*skq_3_sxso8jiu1_g+qed)i^sdo#f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SITE_ID = 1
+
 ALLOWED_HOSTS = []
 
 
@@ -37,6 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # It allows to associate objects to particular websites running in the project
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
+
     'blog',
     'taggit',
 ]
